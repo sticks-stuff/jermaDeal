@@ -7,5 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "stick",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
+    "parse-duration": "^0.4.4",
+    "parse-money": "^1.0.12",
+    "parsecurrency": "^1.0.0",
+    "time-string-parser": "^1.0.4"
+  }
 }
