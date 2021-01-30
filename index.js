@@ -10,6 +10,9 @@ const yesEmoji = "✅";
 const noEmoji = "❌";
 const channel = "deals";
 
+const type = "";
+const time = "";
+
 const filterReacts = (reaction) => (reaction.emoji.name === yesEmoji || reaction.emoji.name === noEmoji) && reaction.message.channel.name === channel && message.author.bot != true;
 
 require('dotenv').config();
@@ -19,7 +22,7 @@ function parseMessage(message) {
 
     var errorMessage = new Array();
 
-    if(messageLines.length < 2) {
+    if(messageLines.length < 1) {
         errorMessage.push("Formatting Incorrect. The correct formatting is: \n Challenge: \n (Optional) Time: \n Worth: ");
         return errorMessage;
     }
@@ -37,6 +40,9 @@ function parseMessage(message) {
                     var parsedTime = parseTime(lineValue[1]);
                     console.log("Time is (in seconds) " + parsedTime);
                     time = parsedTime;
+                } catch (e) {
+                    errorMessage.push("Not a valid time");
+                    break;
                 }
                 break;
             }
@@ -65,7 +71,6 @@ function parseMessage(message) {
     else{
         positive = 0;
         negative = 0;
-        type = "";
         return new Object({challenge, time, worth, type, positive, negative});
     }
 }
