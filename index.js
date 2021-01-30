@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const parseCurrency = require('parsecurrency');
 const parseTime = require('parse-duration');
+const fs = require("fs");
 
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 
@@ -15,12 +16,14 @@ const filterReacts = (reaction) => (reaction.emoji.name === yesEmoji || reaction
 require('dotenv').config();
 
 function parseMessage(message) {
+    var time = ""; //dummy variable in case it doesn't get set
+    var type = ""; //TODO: add types
     messageLines = message.split("\n");
 
     var errorMessage = new Array();
 
-    if(messageLines.length < 2) {
-        errorMessage.push("Didn't specify all values properly");
+    if(messageLines.length < 1) {
+        errorMessage.push("Formatting Incorrect. The correct formatting is: \n Challenge: \n (Optional) Time: \n Worth: ");
         return errorMessage;
     }
 
@@ -68,7 +71,6 @@ function parseMessage(message) {
     else{
         positive = 0;
         negative = 0;
-        type = "";
         return new Object({challenge, time, worth, type, positive, negative});
     }
 }
@@ -78,6 +80,10 @@ client.on('ready', () => {
 });
 
 client.on('message', async (message) => {
+    if (message.content.startsWith("!deal dump")) { //DEBUG
+        let db = JSON.parse(fs.readFileSync("./db.json")) || {}; //DEBUG
+        message.channel.send("```\n" + JSON.stringify(db) + "```"); //DEBUG
+    } else { //DEBUG
     if(message.channel.name === channel && message.author.bot != true) {
         if(LocalDatabase.Get(message.author.id) === null) {
             console.log(message.channel.name);
@@ -97,7 +103,10 @@ client.on('message', async (message) => {
             message.delete();
         }
     }
+    } //DEBUG
 });
+
+
 
 //THIS CODE BELOW IS FOR MODS DELETING MESSAGES (I CANT REALLY FIGURE OUT HOW TO IMPLEMENT IT PROPERLY BUT IT DOESN'T MATTER ANYWAY CUZ THIS IS A PROTOTYPE LUL)
 
