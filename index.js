@@ -37,9 +37,6 @@ function parseMessage(message) {
                     var parsedTime = parseTime(lineValue[1]);
                     console.log("Time is (in seconds) " + parsedTime);
                     time = parsedTime;
-                } catch (e) {
-                    errorMessage.push("Not a valid time");
-                    break;
                 }
                 break;
             }
