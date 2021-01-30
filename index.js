@@ -10,14 +10,13 @@ const yesEmoji = "✅";
 const noEmoji = "❌";
 const channel = "deals";
 
-const type = "";
-const time = "";
-
 const filterReacts = (reaction) => (reaction.emoji.name === yesEmoji || reaction.emoji.name === noEmoji) && reaction.message.channel.name === channel && message.author.bot != true;
 
 require('dotenv').config();
 
 function parseMessage(message) {
+    var time = ""; //dummy variable in case it doesn't get set
+    var type = ""; //TODO: add types
     messageLines = message.split("\n");
 
     var errorMessage = new Array();
