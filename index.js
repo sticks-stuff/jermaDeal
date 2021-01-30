@@ -20,7 +20,7 @@ function parseMessage(message) {
     var errorMessage = new Array();
 
     if(messageLines.length < 2) {
-        errorMessage.push("Didn't specify all values properly");
+        errorMessage.push("Formatting Incorrect. The correct formatting is: \n Challenge: \n (Optional) Time: \n Worth: ");
         return errorMessage;
     }
 
