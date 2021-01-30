@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const parseCurrency = require('parsecurrency');
 const parseTime = require('parse-duration');
+const fs = require("fs");
 
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 
@@ -79,6 +80,10 @@ client.on('ready', () => {
 });
 
 client.on('message', async (message) => {
+    if (message.content.startsWith("!deal dump")) { //DEBUG
+        let db = JSON.parse(fs.readFileSync("./db.json")) || {}; //DEBUG
+        message.channel.send("```\n" + JSON.stringify(db) + "```"); //DEBUG
+    } else { //DEBUG
     if(message.channel.name === channel && message.author.bot != true) {
         if(LocalDatabase.Get(message.author.id) === null) {
             console.log(message.channel.name);
@@ -98,7 +103,10 @@ client.on('message', async (message) => {
             message.delete();
         }
     }
+    } //DEBUG
 });
+
+
 
 //THIS CODE BELOW IS FOR MODS DELETING MESSAGES (I CANT REALLY FIGURE OUT HOW TO IMPLEMENT IT PROPERLY BUT IT DOESN'T MATTER ANYWAY CUZ THIS IS A PROTOTYPE LUL)
 
