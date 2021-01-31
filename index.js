@@ -18,6 +18,10 @@ require('dotenv').config();
 function parseMessage(message) {
     var time = ""; //dummy variable in case it doesn't get set
     var type = ""; //TODO: add types
+    var challenge = null;
+    var worth = null;
+    var positive = 0;
+    var negative = 0;
     messageLines = message.split("\n");
 
     var errorMessage = new Array();
@@ -72,9 +76,13 @@ function parseMessage(message) {
         return errorMessage;
     }
     else{
-        positive = 0;
-        negative = 0;
-        return new Object({challenge, time, worth, type, positive, negative});
+        
+        try {
+            return new Object({challenge, time, worth, type, positive, negative});
+        } catch (e) {
+            errorMessage.push("Formatting Incorrect. The correct formatting is: \n Challenge: \n (Optional) Time: \n Worth: ");
+            return errorMessage;
+        }
     }
 }
 
@@ -169,6 +177,18 @@ client.on('messageReactionAdd' || 'messageReactionRemove'.filter(filterReacts), 
     }
     catch (e) {
         console.log("Person reacted to is not in DB!!"); //TODO add it if its not in there
+        var newMessageObject = parseMessage(reaction.message.content);
+        if(Array.isArray(newMessageObject) === true) {
+            reaction.message.author.send(newMessageObject.join("\n"));
+            reaction.message.delete();
+        } else {
+            LocalDatabase.Set(reaction.message.author.id, newMessageObject);
+            console.log(reaction.message.author.id);
+            reaction.message.react("✅");
+            reaction.message.react("❌");
+            // message.createReactionCollector(filter);
+        }
+
     }
 });
 
