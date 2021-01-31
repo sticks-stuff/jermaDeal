@@ -79,6 +79,8 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
+const fakeDelete = new Array([]);
+
 client.on('message', async (message) => {
     if (message.content.startsWith("!deal dump")) { //DEBUG
         let db = JSON.parse(fs.readFileSync("./db.json")) || {}; //DEBUG
@@ -100,6 +102,7 @@ client.on('message', async (message) => {
             }
         } else {
             message.author.send("One submission per person please!\nYou may delete and resubmit as many times as you like however.");
+            fakeDelete.push(message.author.id);
             message.delete();
         }
     }
@@ -107,26 +110,27 @@ client.on('message', async (message) => {
 });
 
 
-
-//THIS CODE BELOW IS FOR MODS DELETING MESSAGES (I CANT REALLY FIGURE OUT HOW TO IMPLEMENT IT PROPERLY BUT IT DOESN'T MATTER ANYWAY CUZ THIS IS A PROTOTYPE LUL)
-
-// client.on('messageDelete', async (message) => {
-//     if(message.channel.name === channel && message.author.bot != true) {
-//         if (message.partial) {
-//             // If the message this reaction belongs to was removed the fetching might result in an API error, which we need to handle
-//             try {
-//                 await message.fetch();
-//             } catch (error) {
-//                 console.error('Something went wrong when fetching the message: ', error);
-//                 // Return as `reaction.message.author` may be undefined/null
-//                 return;
-//             }
-//         }
-//     }
-//     if(await LocalDatabase.Get(message.author.id) != null) {
-//         LocalDatabase.Set(message.author.id, null);
-//     }
-// });
+client.on('messageDelete', async (message) => {
+    if (message.partial) {
+            try {
+                await message.fetch();
+            } catch (error) {
+                console.error('Something went wrong when fetching the message: ', error);
+                return;
+            }
+        }
+    if(message.channel.name === channel && message.author.bot != true) {
+        if(fakeDelete.includes(message.author.id)) {
+            var index = fakeDelete.indexOf(message.author.id);
+            if (index > -1) {
+                fakeDelete.splice(index, 1);
+            }
+        }
+        else if(await LocalDatabase.Get(message.author.id) != null) {
+            LocalDatabase.Set(message.author.id, null);
+        }
+    }
+});
 
 client.on('messageReactionAdd' || 'messageReactionRemove'.filter(filterReacts), async (reaction) => {
 	// When we receive a reaction we check if the reaction is partial or not
