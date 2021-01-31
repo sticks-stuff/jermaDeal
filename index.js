@@ -40,6 +40,9 @@ function parseMessage(message) {
                     var parsedTime = parseTime(lineValue[1], 'ms'); //set format
                     console.log("Time is (in milliseconds) " + parsedTime);
                     time = parsedTime;
+                    if(time == null) {
+                        errorMessage.push("Couldn't parse a time out of your submission!");
+                    }
                 } catch (e) {
                     errorMessage.push("Not a valid time");
                     break;
