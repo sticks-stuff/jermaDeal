@@ -37,8 +37,8 @@ function parseMessage(message) {
             }
             case("time"): {
                 try {
-                    var parsedTime = parseTime(lineValue[1]);
-                    console.log("Time is (in seconds) " + parsedTime);
+                    var parsedTime = parseTime(lineValue[1], 'ms'); //set format
+                    console.log("Time is (in milliseconds) " + parsedTime);
                     time = parsedTime;
                 } catch (e) {
                     errorMessage.push("Not a valid time");
@@ -116,6 +116,7 @@ client.on('messageDelete', async (message) => {
                 await message.fetch();
             } catch (error) {
                 console.error('Something went wrong when fetching the message: ', error);
+                LocalDatabase.Set(message.author.id, null);
                 return;
             }
         }
